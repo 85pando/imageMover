@@ -5,6 +5,10 @@
 ImageMover is a program that can be used to sort images. Copy all images into one folder and create a subfolder for each category you want. ImageMover will display a button for each folder. Each image will be opened and when you press the corresponding button it will be moved into this folder.
 
 Copyright (C) 2015 Stephan Heidinger
+
+This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+
+See the full license text here: https://creativecommons.org/licenses/by-sa/3.0/legalcode
 """
 
 ######### Imports
