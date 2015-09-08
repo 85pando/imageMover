@@ -4,4 +4,4 @@ Image mover is a small pyhton program that can be used to organize image collect
 Simply drop all the images you want to sort in one folder and create subfolders for the categories you want to sort into.
 The program displays a window and you can click on buttons corresponding to the folders or skip and delete images also.
 
-[Screenshot](screenshots/screenshot01.png)
+![Screenshot](screenshots/screenshot01.png)
