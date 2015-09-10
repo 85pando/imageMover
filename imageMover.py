@@ -41,7 +41,7 @@ class ImageMover:
     # create program menu
     self.programmenu = Menu(self.menubar, tearoff=0)
     self.menubar.add_cascade(label="Program", menu=self.programmenu)
-    self.programmenu.add_checkbutton(label="Verbosity",
+    self.programmenu.add_checkbutton(label="Log to Command Line",
                                  variable=self.verbose,
                                  onvalue=True,
                                  offvalue=False,
@@ -146,8 +146,12 @@ class ImageMover:
       previousImage, previousPath = self.lastMovedImage.pop()
       # put current image back into front of list
       self.fileNames = [self.currImage] + self.fileNames
+      if self.verbose:
+        print("Put image", self.currImage, "back into the file list to be processed.")
       # move previous image back into the main folder
       rename(previousPath, previousImage)
+      if self.verbose:
+        print("Undo move of", previousImage, "from location", previousPath)
       # display the image which we just moved back
       self.displaySpecificImage(previousImage)
 
