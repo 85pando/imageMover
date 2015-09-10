@@ -59,6 +59,7 @@ class ImageMover:
     Button(self.myParent, text="Skip", command=self.skipClick).pack(side=LEFT)
     Button(self.myParent, text="Delete", command=self.deleteClick).pack(side=LEFT)
     # create arrays for folder buttons
+    # noinspection PyUnusedLocal
     buttons = [0 for x in range(len(directoryNames))]
     for counter in range(len(directoryNames)):
       buttons[counter] = Button(self.myParent,
@@ -140,6 +141,7 @@ class ImageMover:
     :param filetotest: The file to test for interpretability as an image
     :return: True if filetotest can be interpreted as an image. False otherwise
     """
+    # noinspection PyBroadException
     try:
       Image.open(filetotest)
     except IOError:
@@ -155,9 +157,10 @@ class ImageMover:
     """
     This method takes the current image and displays it in the Canvas.
     """
-
+    # noinspection PyBroadException
     try:
       # this variable has to be kept in class, or drawing might fail
+      # noinspection PyAttributeOutsideInit
       self.imagefile = ImageTk.PhotoImage(Image.open(self.currImage))
       self.canvas.delete("all")
       self.canvas.create_image(0, 0, image=self.imagefile, anchor="nw")
