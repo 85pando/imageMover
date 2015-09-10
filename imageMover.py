@@ -197,7 +197,6 @@ class ImageMover:
     return True
 
   def drawCanvas(self):
-    # noinspection PyBroadException
     """
     This method takes the current image and displays it in the Canvas.
     """
@@ -217,13 +216,14 @@ class ImageMover:
     # draw frame
     self.imageFrame.update_idletasks()
     # self.imageFrame.update()
-###### End Class
 
   def closeWindow(self):
     """
     This method can be used to close the ImageMover window.
     """
     self.myParent.destroy()
+
+    ###### End Class
 
 if __name__ == '__main__':
   usage = "usage: %prog [options] path"
