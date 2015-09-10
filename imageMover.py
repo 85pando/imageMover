@@ -43,6 +43,7 @@ class ImageMover:
     self.programmenu.add_checkbutton(label="Verbosity",
                                  variable=self.verbose,
                                  onvalue=True,
+                                 offvalue=False,
     )
     self.programmenu.add_separator()
     self.programmenu.add_command(label="Exit", command=self.closeWindow)
@@ -194,16 +195,6 @@ class ImageMover:
     This method can be used to close the ImageMover window.
     """
     self.myParent.destroy()
-
-  def toggleVerbose(self):
-    """
-    This method can be used to toggle the state of the verbose variable.
-    """
-    self.verbose = not self.verbose
-    if self.verbose:
-      print("verbose output is now activated.")
-    else:
-      print("verbose output is now deactivated.")
 
 if __name__ == '__main__':
   usage = "usage: %prog [options] path"
