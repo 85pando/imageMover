@@ -30,7 +30,12 @@ class ImageMover:
   """
 
   def __init__(self, parent, verbose):
-    self.verbose = verbose
+    # This seems to have to be so complex, as CheckBoxes need a Tkinter.BooleanVar and not a normal Boolean to work.
+    self.verbose = BooleanVar()
+    if verbose:
+      self.verbose.set(True)
+    else:
+      self.verbose.set(False)
     self.lastMovedImage = []
 
     self.myParent = parent
@@ -43,8 +48,6 @@ class ImageMover:
     self.menubar.add_cascade(label="Program", menu=self.programmenu)
     self.programmenu.add_checkbutton(label="Log to Command Line",
                                  variable=self.verbose,
-                                 onvalue=True,
-                                 offvalue=False,
     )
     self.programmenu.add_separator()
     self.programmenu.add_command(label="Exit", command=self.closeWindow)
@@ -97,7 +100,7 @@ class ImageMover:
     """
     This method is used when clicking the skip button. It does not move the current image, just goes on to the next.
     """
-    if self.verbose:
+    if self.verbose.get():
       print("Skipping image:", self.currImage)
     self.displayNextImage()
 
@@ -107,7 +110,7 @@ class ImageMover:
     """
     # just to be sure its an image
     if self.testIfImage(self.currImage):
-      if self.verbose:
+      if self.verbose.get():
         print("Deleting image:", self.currImage)
       remove(self.currImage)
     self.displayNextImage()
@@ -128,7 +131,7 @@ class ImageMover:
     # just to make sure its an image
     if self.testIfImage(self.currImage):
       targetString = targetString + "/" + self.currImage
-      if self.verbose:
+      if self.verbose.get():
         print("Moving image", self.currImage, "to", targetString)
       # store new image location for possible undo operation
       self.lastMovedImage.append((self.currImage, targetString))
@@ -140,17 +143,17 @@ class ImageMover:
     This method undoes the last moves. It cannot undo deletes and does not care about skips.
     """
     if len(self.lastMovedImage) == 0:
-      if self.verbose:
+      if self.verbose.get():
         print("There is no previous image to be moved.")
     else:
       previousImage, previousPath = self.lastMovedImage.pop()
       # put current image back into list
       self.fileNames.append(self.currImage)
-      if self.verbose:
+      if self.verbose.get():
         print("Put image", self.currImage, "back into the file list to be processed.")
       # move previous image back into the main folder
       rename(previousPath, previousImage)
-      if self.verbose:
+      if self.verbose.get():
         print("Undo move of", previousImage, "from location", previousPath)
       # display the image which we just moved back
       self.displaySpecificImage(previousImage)
@@ -167,7 +170,7 @@ class ImageMover:
         # found image
         break
     if self.currImage == prevImage:
-      if self.verbose:
+      if self.verbose.get():
         print("No more image left, exiting.")
       self.closeWindow()
     else:
@@ -213,7 +216,7 @@ class ImageMover:
       self.canvas.create_image(0, 0, image=self.imagefile, anchor="nw")
       self.canvas.config(scrollregion=self.canvas.bbox(ALL))
     except:
-      if self.verbose:
+      if self.verbose.get():
         print("This should not have happened, I verified that", self.currImage, "is an image beforehand.")
       exit(1)
     self.myParent.title("images left: " + str(len(self.fileNames)) + "; image: " + self.currImage)
