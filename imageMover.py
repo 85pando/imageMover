@@ -60,7 +60,7 @@ class ImageMover:
     Button(self.myParent, text="Delete", command=self.deleteClick).pack(side=LEFT)
     # create arrays for folder buttons
     # noinspection PyUnusedLocal
-    buttons = [0 for x in range(len(directoryNames))]
+    buttons = [Button() for x in range(len(directoryNames))]
     for counter in range(len(directoryNames)):
       buttons[counter] = Button(self.myParent,
                                 text=directoryNames[counter],
