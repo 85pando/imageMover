@@ -31,6 +31,7 @@ class ImageMover:
 
   def __init__(self, parent, verbose):
     self.verbose = verbose
+    self.lastMovedImage = []
 
     self.myParent = parent
     self.myParent.title("Not yet initialized")
@@ -47,6 +48,7 @@ class ImageMover:
     )
     self.programmenu.add_separator()
     self.programmenu.add_command(label="Exit", command=self.closeWindow)
+    self.menubar.add_command(label="Undo Move", command=self.undoClick)
     # create imageFrame, Scrollbars & canvas
     self.imageFrame = Frame(self.myParent, bd=2, relief=SUNKEN)
     self.imageFrame.grid_rowconfigure(0, weight=1)
@@ -128,8 +130,26 @@ class ImageMover:
       targetString = targetString + "/" + self.currImage
       if self.verbose:
         print("Moving image", self.currImage, "to", targetString)
+      # store new image location for possible undo operation
+      self.lastMovedImage.append((self.currImage, targetString))
       rename(self.currImage, targetString)
       self.displayNextImage()
+
+  def undoClick(self):
+    """
+    This method undoes the last moves. It cannot undo deletes and does not care about skips.
+    """
+    if len(self.lastMovedImage) == 0:
+      if self.verbose:
+        print("There is no previous image to be moved.")
+    else:
+      previousImage, previousPath = self.lastMovedImage.pop()
+      # put current image back into front of list
+      self.fileNames = [self.currImage] + self.fileNames
+      # move previous image back into the main folder
+      rename(previousPath, previousImage)
+      # display the image which we just moved back
+      self.displaySpecificImage(previousImage)
 
   def displayNextImage(self):
     """
@@ -148,6 +168,15 @@ class ImageMover:
       self.closeWindow()
     else:
       self.drawCanvas()
+
+  def displaySpecificImage(self, imagePath):
+    """
+    This method will display the image that is given at the path imagePath.
+    :param imagePath: The path of the image to display instead of the current one.
+    """
+    # set specific image as image to display
+    self.currImage = imagePath
+    self.drawCanvas()
 
   @staticmethod
   def testIfImage(filetotest):
