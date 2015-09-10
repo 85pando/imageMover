@@ -211,7 +211,6 @@ if __name__ == '__main__':
   pathString = ""
   # remove all options from args
   while len(sys.argv) >= 2 and sys.argv[1].startswith("-"):
-    print(sys.argv)
     del sys.argv[1]
   # check if a path was given
   if len(sys.argv) == 1:
