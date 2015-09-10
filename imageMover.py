@@ -215,9 +215,9 @@ if __name__ == '__main__':
     del sys.argv[1]
   # check if a path was given
   if len(sys.argv) == 1:
+    pathString = path.abspath("./")
     if options.verbose:
-      pathString = path.abspath("./")
-      print("Using current directory as path:")
+      print("Using current directory as path.")
   else:
     pathString = path.abspath(sys.argv[1])
     if options.verbose:
