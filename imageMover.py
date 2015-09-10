@@ -144,8 +144,8 @@ class ImageMover:
         print("There is no previous image to be moved.")
     else:
       previousImage, previousPath = self.lastMovedImage.pop()
-      # put current image back into front of list
-      self.fileNames = [self.currImage] + self.fileNames
+      # put current image back into list
+      self.fileNames.append(self.currImage)
       if self.verbose:
         print("Put image", self.currImage, "back into the file list to be processed.")
       # move previous image back into the main folder
