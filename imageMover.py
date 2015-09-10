@@ -133,12 +133,6 @@ class ImageMover:
     # self.imageFrame.update()
 ###### End Class
 
-def main():
-  root = Tk()
-  imageMover = ImageMover(root)
-  root.mainloop()
-  exit(0)
-
 if __name__ == '__main__':
   pathString = ""
   # check for one argument
@@ -152,4 +146,7 @@ if __name__ == '__main__':
   print("image base path:", pathString)
   chdir(pathString)
   # start the program
-  main()
+  root = Tk()
+  imageMover = ImageMover(root)
+  root.mainloop()
+  exit(0)
