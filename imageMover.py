@@ -56,8 +56,8 @@ class ImageMover:
     directoryNames = sorted(walkResult[1])
     self.fileNames = sorted(walkResult[2])
     # create skip and delete button
-    Button(self.myParent, text="Skip", command=self.skipClick).pack(side=LEFT)
     Button(self.myParent, text="Delete", command=self.deleteClick).pack(side=LEFT)
+    Button(self.myParent, text="Skip", command=self.skipClick).pack(side=LEFT)
     # create arrays for folder buttons
     # noinspection PyUnusedLocal
     buttons = [Button() for x in range(len(directoryNames))]
@@ -74,7 +74,7 @@ class ImageMover:
       self.displayNextImage()
       self.drawCanvas()
     else:
-      exit(1)
+      self.closeWindow()
 
   def skipClick(self):
     """
@@ -130,7 +130,7 @@ class ImageMover:
     if self.currImage == prevImage:
       if self.verbose:
         print("No more image left, exiting.")
-      self.myParent.destroy()
+      self.closeWindow()
     else:
       self.drawCanvas()
 
