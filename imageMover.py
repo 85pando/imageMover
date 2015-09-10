@@ -150,8 +150,6 @@ if __name__ == '__main__':
                     )
 
   parser.set_defaults(verbose=False)
-
-
   (options, args) = parser.parse_args()
 
   pathString = ""
