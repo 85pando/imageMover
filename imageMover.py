@@ -30,9 +30,23 @@ class ImageMover:
   """
 
   def __init__(self, parent, verbose):
+    self.verbose = verbose
+
     self.myParent = parent
     self.myParent.title("Not yet initialized")
-    self.verbose = verbose
+    # create menu bar
+    self.menubar = Menu(self.myParent)
+    self.myParent.config(menu=self.menubar)
+    # create program menu
+    self.programmenu = Menu(self.menubar, tearoff=0)
+    self.menubar.add_cascade(label="Program", menu=self.programmenu)
+    self.programmenu.add_checkbutton(label="Verbosity",
+                                 variable=self.verbose,
+                                 onvalue=True,
+    )
+    self.programmenu.add_separator()
+    self.programmenu.add_command(label="Exit", command=self.closeWindow)
+    # create imageFrame, Scrollbars & canvas
     self.imageFrame = Frame(self.myParent, bd=2, relief=SUNKEN)
     self.imageFrame.grid_rowconfigure(0, weight=1)
     self.imageFrame.grid_columnconfigure(0, weight=1)
@@ -175,6 +189,22 @@ class ImageMover:
     # self.imageFrame.update()
 ###### End Class
 
+  def closeWindow(self):
+    """
+    This method can be used to close the ImageMover window.
+    """
+    self.myParent.destroy()
+
+  def toggleVerbose(self):
+    """
+    This method can be used to toggle the state of the verbose variable.
+    """
+    self.verbose = not self.verbose
+    if self.verbose:
+      print("verbose output is now activated.")
+    else:
+      print("verbose output is now deactivated.")
+
 if __name__ == '__main__':
   usage = "usage: %prog [options] path"
   parser = OptionParser(usage=usage, version="%prog 0.1")
@@ -183,23 +213,25 @@ if __name__ == '__main__':
                     dest='verbose',
                     help='enables output to command line'
                     )
-
   parser.set_defaults(verbose=False)
   (options, args) = parser.parse_args()
 
+  # create pathString
   pathString = ""
-  # check for one argument
-  if not len(sys.argv) == 2:
-    # no path given, use current path
-    pathString = path.abspath("./")
+  # remove all options from args
+  while len(sys.argv) >= 2 and sys.argv[1].startswith("-"):
+    print(sys.argv)
+    del sys.argv[1]
+  # check if a path was given
+  if len(sys.argv) == 1:
+    if options.verbose:
+      pathString = path.abspath("./")
+      print("Using current directory as path:")
   else:
-    # path is given
     pathString = path.abspath(sys.argv[1])
-  # images base path
-  if options.verbose:
-    print("image base path:", pathString)
+    if options.verbose:
+      print("Using path:", pathString)
   chdir(pathString)
-
 
   # start the program
   root = Tk()
