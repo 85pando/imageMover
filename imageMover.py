@@ -130,7 +130,7 @@ class ImageMover:
     if self.currImage == prevImage:
       if self.verbose:
         print("No more image left, exiting.")
-      exit(0)
+      self.myParent.destroy()
     else:
       self.drawCanvas()
 
