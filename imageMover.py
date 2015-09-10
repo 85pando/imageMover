@@ -30,12 +30,7 @@ class ImageMover:
   """
 
   def __init__(self, parent, verbose):
-    # This seems to have to be so complex, as CheckBoxes need a Tkinter.BooleanVar and not a normal Boolean to work.
-    self.verbose = BooleanVar()
-    if verbose:
-      self.verbose.set(True)
-    else:
-      self.verbose.set(False)
+    self.verbose = BooleanVar(value=verbose)
     self.lastMovedImage = []
 
     self.myParent = parent
