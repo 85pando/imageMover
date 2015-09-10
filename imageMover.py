@@ -20,13 +20,15 @@ from os import path
 from os import chdir
 from os import remove
 from os import rename
+from optparse import OptionParser
 ######### End Imports
 
 class ImageMover:
 
-  def __init__(self, parent):
+  def __init__(self, parent, verbose):
     self.myParent = parent
     self.myParent.title("Not yet initialized")
+    self.verbose = verbose
     self.imageFrame = Frame(self.myParent, bd=2, relief=SUNKEN)
     self.imageFrame.grid_rowconfigure(0, weight=1)
     self.imageFrame.grid_columnconfigure(0, weight=1)
@@ -70,13 +72,15 @@ class ImageMover:
       exit(1)
 
   def skipClick(self):
-    print("Skipping image:", self.currImage)
+    if self.verbose:
+      print("Skipping image:", self.currImage)
     self.displayNextImage()
 
   def deleteClick(self):
     # just to be sure its an image
     if self.testIfImage(self.currImage):
-      print("Deleting image:", self.currImage)
+      if self.verbose:
+        print("Deleting image:", self.currImage)
       remove(self.currImage)
     self.displayNextImage()
 
@@ -87,7 +91,8 @@ class ImageMover:
     # just to make sure its an image
     if self.testIfImage(self.currImage):
       targetString = targetString + "/" + self.currImage
-      print("Moving image", self.currImage, "to", targetString)
+      if self.verbose:
+        print("Moving image", self.currImage, "to", targetString)
       rename(self.currImage, targetString)
       self.displayNextImage()
 
@@ -100,7 +105,8 @@ class ImageMover:
         # found image
         break
     if self.currImage == prevImage:
-      print("No more image left, exiting.")
+      if self.verbose:
+        print("No more image left, exiting.")
       exit(0)
     else:
       self.drawCanvas()
@@ -125,7 +131,8 @@ class ImageMover:
       self.canvas.create_image(0, 0, image=self.imagefile, anchor="nw")
       self.canvas.config(scrollregion=self.canvas.bbox(ALL))
     except:
-      print("This should not have happened, I verified that", self.currImage, "is an image beforehand.")
+      if self.verbose:
+        print("This should not have happened, I verified that", self.currImage, "is an image beforehand.")
       exit(1)
     self.myParent.title("images left: " + str(len(self.fileNames)) + "; image: " + self.currImage)
     # draw frame
@@ -134,6 +141,19 @@ class ImageMover:
 ###### End Class
 
 if __name__ == '__main__':
+  usage = "usage: %prog [options] path"
+  parser = OptionParser(usage=usage, version="%prog 0.1")
+  parser.add_option('-v', '--verbose',
+                    action='store_true',
+                    dest='verbose',
+                    help='enables output to command line'
+                    )
+
+  parser.set_defaults(verbose=False)
+
+
+  (options, args) = parser.parse_args()
+
   pathString = ""
   # check for one argument
   if not len(sys.argv) == 2:
@@ -143,10 +163,13 @@ if __name__ == '__main__':
     # path is given
     pathString = path.abspath(sys.argv[1])
   # images base path
-  print("image base path:", pathString)
+  if options.verbose:
+    print("image base path:", pathString)
   chdir(pathString)
+
+
   # start the program
   root = Tk()
-  imageMover = ImageMover(root)
+  imageMover = ImageMover(root, options.verbose)
   root.mainloop()
   exit(0)
