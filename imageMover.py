@@ -25,6 +25,10 @@ from optparse import OptionParser
 
 class ImageMover:
 
+  """
+  The ImageMover class displays a windows in which an image is shown. Buttons are presented for skipping, deleting or moving the image. The buttons for moving images are based on the folders in the current path.
+  """
+
   def __init__(self, parent, verbose):
     self.myParent = parent
     self.myParent.title("Not yet initialized")
@@ -72,11 +76,17 @@ class ImageMover:
       exit(1)
 
   def skipClick(self):
+    """
+    This method is used when clicking the skip button. It does not move the current image, just goes on to the next.
+    """
     if self.verbose:
       print("Skipping image:", self.currImage)
     self.displayNextImage()
 
   def deleteClick(self):
+    """
+    This method is used, when clicking the delete button. It deletes the current image and afterwards displays the next image.
+    """
     # just to be sure its an image
     if self.testIfImage(self.currImage):
       if self.verbose:
@@ -85,9 +95,18 @@ class ImageMover:
     self.displayNextImage()
 
   def directoryClickClosure(self, label):
+    """
+    This is a closure method that is called upon pressing one of the directory buttons. It sends the label of the directory to the directoryClick method.
+    :param label: the label of the button clicked
+    :return: the label of the button clicked
+    """
     return lambda: self.directoryClick(label)
 
   def directoryClick(self, targetString):
+    """
+    This method is used, when one of the directory buttons is clicked. It moves the current image to the corresponding folder and afterwards displays the next image.
+    :param targetString:
+    """
     # just to make sure its an image
     if self.testIfImage(self.currImage):
       targetString = targetString + "/" + self.currImage
@@ -97,6 +116,9 @@ class ImageMover:
       self.displayNextImage()
 
   def displayNextImage(self):
+    """
+    This method displays the next image from a list of files in the canvas. When there are no more images left, it will close the window.
+    """
     prevImage = self.currImage
     while self.fileNames:
       # get next file
@@ -113,6 +135,11 @@ class ImageMover:
 
   @staticmethod
   def testIfImage(filetotest):
+    """
+    This method can be used to test, if a file can be interpreted as an image.
+    :param filetotest: The file to test for interpretability as an image
+    :return: True if filetotest can be interpreted as an image. False otherwise
+    """
     try:
       Image.open(filetotest)
     except IOError:
@@ -124,6 +151,11 @@ class ImageMover:
     return True
 
   def drawCanvas(self):
+    # noinspection PyBroadException
+    """
+    This method takes the current image and displays it in the Canvas.
+    """
+
     try:
       # this variable has to be kept in class, or drawing might fail
       self.imagefile = ImageTk.PhotoImage(Image.open(self.currImage))
