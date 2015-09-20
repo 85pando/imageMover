@@ -107,12 +107,13 @@ class ImageMover:
                                  variable=self.verbose,
     )
     self.programmenu.add_separator()
+    self.programmenu.add_command(label="New Category", command=self.newCategoryClick)
+    self.programmenu.add_command(label="Link folder", command=self.symlinkClick)
+    self.programmenu.add_separator()
     self.programmenu.add_command(label="Exit", command=self.closeWindow)
     self.menubar.add_command(label="Undo Move", command=self.undoClick)
     self.menubar.add_separator()
-    self.menubar.add_command(label="New Category", command=self.newCategoryClick)
     self.menubar.add_command(label="Rename Image", command=self.renameClick)
-    self.menubar.add_command(label="Link folder", command=self.symlinkClick)
 
     # create imageFrame, Scrollbars & canvas
     self.imageFrame = Frame(self.myParent, bd=2, relief=SUNKEN)
