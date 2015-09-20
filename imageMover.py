@@ -35,14 +35,15 @@ class ImageMover:
   def __init__(self, parent, verbose):
     self.verbose = BooleanVar(value=verbose)
     self.lastMovedImage = []
-    # prepare additional windows
+    # prepare windows
+
     ## newCategory window
     self.newCategoryWindow = Toplevel()
     Label(self.newCategoryWindow, text="Enter the name for the new Category:").pack()
     self.newCategoryText = StringVar()
-    self.newCategoryWindowEntry = Entry(self.newCategoryWindow,
-                                        textvariable=self.newCategoryText,
-                                       ).pack(fill=X)
+    Entry(self.newCategoryWindow,
+          textvariable=self.newCategoryText,
+         ).pack(fill=X)
     Button(self.newCategoryWindow,
            text="Create new Category",
            command=self.newCategoryExecuteClick,
@@ -52,13 +53,14 @@ class ImageMover:
            command=self.newCategoryCancelClick,
     ).pack(fill=X,side=LEFT)
     self.newCategoryWindow.withdraw()
+
     ## Rename window
     self.renameWindow = Toplevel()
     Label(self.renameWindow, text="Enter the new name for the current image:").pack()
     self.renameText = StringVar()
-    self.renameWindowEntry = Entry(self.renameWindow,
-                                   textvariable=self.renameText,
-                                   ).pack()
+    Entry(self.renameWindow,
+          textvariable=self.renameText,
+         ).pack()
     Button(self.renameWindow,
            text="Rename image",
            command=self.renameExecuteClick,
@@ -94,10 +96,11 @@ class ImageMover:
     ## parent window
     self.myParent = parent
     self.myParent.title("Not yet initialized")
+
     # create menu bar
     self.menubar = Menu(self.myParent)
     self.myParent.config(menu=self.menubar)
-    # create program menu
+    ## create program menu
     self.programmenu = Menu(self.menubar, tearoff=0)
     self.menubar.add_cascade(label="Program", menu=self.programmenu)
     self.programmenu.add_checkbutton(label="Log to Command Line",
@@ -244,7 +247,7 @@ class ImageMover:
              text=newCategoryName,
              command=self.directoryClickClosure(newCategoryName)
       ).pack(side=LEFT)
-    self.newCategoryWindow.withdraw()
+      self.newCategoryWindow.withdraw()
 
   def newCategoryCancelClick(self):
     """
@@ -269,7 +272,7 @@ class ImageMover:
     if path.exists(newFilePath):
       if self.verbose:
         print("File already exists.")
-      showerror("Oh noes", "The filename you provided already exists.")
+      showerror("Oh noes!", "The filename you provided already exists.")
     else:
       if self.verbose:
         print("Rename image", self.currImage, "to", newFileName)
