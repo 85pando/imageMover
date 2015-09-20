@@ -20,6 +20,7 @@ from os import path
 from os import chdir
 from os import remove
 from os import rename
+from os import makedirs
 from optparse import OptionParser
 ######### End Imports
 
@@ -32,6 +33,24 @@ class ImageMover:
   def __init__(self, parent, verbose):
     self.verbose = BooleanVar(value=verbose)
     self.lastMovedImage = []
+    # prepare additional windows
+    ## newCategory window
+    self.newCategoryWindow = Toplevel()
+    Label(self.newCategoryWindow, text="Enter the name for the new Category:").pack()
+    self.newCategoryText = StringVar()
+    self.newCategoryWindowEntry = Entry(self.newCategoryWindow,
+                                        textvariable=self.newCategoryText,
+                                       ).pack(fill=X)
+    Button(self.newCategoryWindow,
+           text="Create new Category",
+           command=self.newCategoryExecuteClick,
+    ).pack(fill=X,side=LEFT)
+    Button(self.newCategoryWindow,
+           text="Cancel",
+           command=self.newCategoryCancelClick,
+    ).pack(fill=X,side=LEFT)
+    self.newCategoryWindow.withdraw()
+
 
     self.myParent = parent
     self.myParent.title("Not yet initialized")
@@ -47,6 +66,8 @@ class ImageMover:
     self.programmenu.add_separator()
     self.programmenu.add_command(label="Exit", command=self.closeWindow)
     self.menubar.add_command(label="Undo Move", command=self.undoClick)
+    self.menubar.add_separator()
+    self.menubar.add_command(label="New Category", command=self.newCategoryClick)
     # create imageFrame, Scrollbars & canvas
     self.imageFrame = Frame(self.myParent, bd=2, relief=SUNKEN)
     self.imageFrame.grid_rowconfigure(0, weight=1)
@@ -153,6 +174,43 @@ class ImageMover:
       # display the image which we just moved back
       self.displaySpecificImage(previousImage)
 
+  def newCategoryClick(self):
+    """
+    This method makes the self.newCategoryWindow visible and sets a new string to be set in the Entry.
+    """
+    if self.verbose:
+      print("Opening new category window.")
+    self.newCategoryText.set("new category")
+    self.newCategoryWindow.deiconify()
+
+
+  def newCategoryExecuteClick(self):
+    """
+    This method creates a new folder and a button so that images can now be moved into this folder. The name of the folder is based on the content of the Entry widget inside the self.newCategoryWindow. If the folder already exists a message may be posted on the console based on verbosity.
+    """
+    newCategoryName = self.newCategoryText.get()
+    newCategoryPath = path.abspath(newCategoryName)
+    if path.exists(newCategoryPath):
+      if self.verbose:
+        print("Category already exists")
+    else:
+      if self.verbose:
+        print("Create new Category", newCategoryName)
+      makedirs(newCategoryPath)
+      Button(self.myParent,
+             text=newCategoryName,
+             command=self.directoryClickClosure(newCategoryName)
+      ).pack(side=LEFT)
+    self.newCategoryWindow.withdraw()
+
+  def newCategoryCancelClick(self):
+    """
+    This method hides the createNewCategory window and may print something to the console based on verbosity.
+    """
+    if self.verbose:
+      print("No new category created.")
+    self.newCategoryWindow.withdraw()
+
   def displayNextImage(self):
     """
     This method displays the next image from a list of files in the canvas. When there are no more images left, it will close the window.
@@ -229,7 +287,7 @@ class ImageMover:
 
 if __name__ == '__main__':
   usage = "usage: %prog [options] [path]"
-  parser = OptionParser(usage=usage, version="%prog 0.1")
+  parser = OptionParser(usage=usage, version="%prog v0.1.x")
   parser.add_option('-v', '--verbose',
                     action='store_true',
                     dest='verbose',
