@@ -239,6 +239,7 @@ class ImageMover:
     if path.exists(newCategoryPath):
       if self.verbose:
         print("Category already exists")
+      showerror("Oh noes!", "The new category already exists.")
     else:
       if self.verbose:
         print("Create new Category", newCategoryName)
