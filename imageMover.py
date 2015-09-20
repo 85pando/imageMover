@@ -21,6 +21,7 @@ from os import chdir
 from os import remove
 from os import rename
 from os import makedirs
+from os import symlink
 from tkMessageBox import showerror
 from optparse import OptionParser
 ######### End Imports
@@ -68,6 +69,29 @@ class ImageMover:
             ).pack(side=LEFT)
     self.renameWindow.withdraw()
 
+    ## Symlink window
+    self.symlinkWindow = Toplevel()
+    Label(self.symlinkWindow, text="Name on the button").grid(row=0, column=0)
+    Label(self.symlinkWindow, text="Name on the button").grid(row=0, column=1)
+    self.symlinkLinkName = StringVar()
+    Entry(self.symlinkWindow,
+          textvariable=self.symlinkLinkName,
+          ).grid(row=1,column=0)
+    self.symlinkSourcePath = StringVar()
+    Entry(self.symlinkWindow,
+          textvariable=self.symlinkSourcePath,
+         ).grid(row=1, column=1)
+    Button(self.symlinkWindow,
+           text="Create Link",
+           command=self.symlinkExecuteClick,
+           ).grid(row=2,column=0)
+    Button(self.symlinkWindow,
+           text="Cancel",
+           command=self.symlinkCancelClick,
+    ).grid(row=2, column=1)
+    self.symlinkWindow.withdraw()
+
+    ## parent window
     self.myParent = parent
     self.myParent.title("Not yet initialized")
     # create menu bar
@@ -85,6 +109,8 @@ class ImageMover:
     self.menubar.add_separator()
     self.menubar.add_command(label="New Category", command=self.newCategoryClick)
     self.menubar.add_command(label="Rename Image", command=self.renameClick)
+    self.menubar.add_command(label="Link folder", command=self.symlinkClick)
+
     # create imageFrame, Scrollbars & canvas
     self.imageFrame = Frame(self.myParent, bd=2, relief=SUNKEN)
     self.imageFrame.grid_rowconfigure(0, weight=1)
@@ -259,6 +285,39 @@ class ImageMover:
     if self.verbose:
       print("Image not renamed.")
     self.renameWindow.withdraw()
+
+  def symlinkClick(self):
+    """
+    This method makes the self.symlinkWindow visible and sets a new string to be set in the Entry.
+    """
+    if self.verbose:
+      print("Opening symlinking window.")
+    self.symlinkLinkName.set("linkName")
+    self.symlinkSourcePath.set("linkSource")
+    self.symlinkWindow.deiconify()
+
+  def symlinkExecuteClick(self):
+    if path.exists(self.symlinkLinkName.get()):
+      if self.verbose:
+        print("Link name already exists.")
+      showerror("Oh noes!", "The link name already exists.")
+    else:
+      if not path.exists(self.symlinkSourcePath.get()):
+        if self.verbose:
+          print("Link source does not exists.")
+        showerror("Oh noes!", "The source for the link does not exist.")
+      else:
+        symlink(self.symlinkSourcePath.get(), self.symlinkLinkName.get())
+        Button(self.myParent,
+               text=self.symlinkLinkName.get(),
+               command=self.directoryClickClosure(self.symlinkLinkName.get())
+               ).pack(side=LEFT)
+        self.symlinkWindow.withdraw()
+
+  def symlinkCancelClick(self):
+    if self.verbose:
+      print("Symlinking cancelled.")
+    self.symlinkWindow.withdraw()
 
   def displayNextImage(self):
     """
