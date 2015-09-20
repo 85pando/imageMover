@@ -14,4 +14,19 @@ Starting from the command line: ``./imageMover [options] [path]``
 
 The GUI has an option to toggle logging to the command line (which only makes sense, when you started the program from the command line of course).
 
-![Screenshot](screenshots/screenshot01.png)
+* Main Window
+
+![Main Window](screenshots/screenshot01.png)
+
+* Rename Window
+
+![Rename Window](screenshots/screenshot02.png)
+
+* New Category Window
+
+![Create New Category Window](screenshots/screenshot03.png)
+
+* Link Window
+
+![Link Window](screenshots/screenshot04.png)
+
