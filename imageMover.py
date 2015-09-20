@@ -39,6 +39,7 @@ class ImageMover:
 
     ## newCategory window
     self.newCategoryWindow = Toplevel()
+    self.newCategoryWindow.title("Create new Category")
     Label(self.newCategoryWindow, text="Enter the name for the new Category:").pack()
     self.newCategoryText = StringVar()
     Entry(self.newCategoryWindow,
@@ -56,6 +57,7 @@ class ImageMover:
 
     ## Rename window
     self.renameWindow = Toplevel()
+    self.renameWindow.title("Rename Image")
     Label(self.renameWindow, text="Enter the new name for the current image:").pack()
     self.renameText = StringVar()
     Entry(self.renameWindow,
@@ -73,6 +75,7 @@ class ImageMover:
 
     ## Symlink window
     self.symlinkWindow = Toplevel()
+    self.symlinkWindow.title("Create Link")
     Label(self.symlinkWindow, text="Name on the button").grid(row=0, column=0)
     Label(self.symlinkWindow, text="Name on the button").grid(row=0, column=1)
     self.symlinkLinkName = StringVar()
@@ -229,6 +232,7 @@ class ImageMover:
       print("Opening new category window.")
     self.newCategoryText.set("new category")
     self.newCategoryWindow.deiconify()
+    self.newCategoryWindow.focus()
 
 
   def newCategoryExecuteClick(self):
@@ -267,6 +271,7 @@ class ImageMover:
       print("Opening renaming window.")
     self.renameText.set("newImageName.jpg")
     self.renameWindow.deiconify()
+    self.renameWindow.focus()
 
   def renameExecuteClick(self):
     newFileName = self.renameText.get()
@@ -300,6 +305,7 @@ class ImageMover:
     self.symlinkLinkName.set("linkName")
     self.symlinkSourcePath.set("linkSource")
     self.symlinkWindow.deiconify()
+    self.symlinkWindow.focus()
 
   def symlinkExecuteClick(self):
     if path.exists(self.symlinkLinkName.get()):
