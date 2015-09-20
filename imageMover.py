@@ -21,6 +21,7 @@ from os import chdir
 from os import remove
 from os import rename
 from os import makedirs
+from tkMessageBox import showerror
 from optparse import OptionParser
 ######### End Imports
 
@@ -50,7 +51,22 @@ class ImageMover:
            command=self.newCategoryCancelClick,
     ).pack(fill=X,side=LEFT)
     self.newCategoryWindow.withdraw()
-
+    ## Rename window
+    self.renameWindow = Toplevel()
+    Label(self.renameWindow, text="Enter the new name for the current image:").pack()
+    self.renameText = StringVar()
+    self.renameWindowEntry = Entry(self.renameWindow,
+                                   textvariable=self.renameText,
+                                   ).pack()
+    Button(self.renameWindow,
+           text="Rename image",
+           command=self.renameExecuteClick,
+           ).pack(side=LEFT)
+    Button(self.renameWindow,
+            text="Cancel",
+            command=self.renameCancelClick,
+            ).pack(side=LEFT)
+    self.renameWindow.withdraw()
 
     self.myParent = parent
     self.myParent.title("Not yet initialized")
@@ -68,6 +84,7 @@ class ImageMover:
     self.menubar.add_command(label="Undo Move", command=self.undoClick)
     self.menubar.add_separator()
     self.menubar.add_command(label="New Category", command=self.newCategoryClick)
+    self.menubar.add_command(label="Rename Image", command=self.renameClick)
     # create imageFrame, Scrollbars & canvas
     self.imageFrame = Frame(self.myParent, bd=2, relief=SUNKEN)
     self.imageFrame.grid_rowconfigure(0, weight=1)
@@ -210,6 +227,38 @@ class ImageMover:
     if self.verbose:
       print("No new category created.")
     self.newCategoryWindow.withdraw()
+
+  def renameClick(self):
+    """
+    This method makes the self.renameWindow visible and sets a new string to be set in the Entry.
+    """
+    if self.verbose:
+      print("Opening renaming window.")
+    self.renameText.set("newImageName.jpg")
+    self.renameWindow.deiconify()
+
+  def renameExecuteClick(self):
+    newFileName = self.renameText.get()
+    newFilePath = path.abspath(newFileName)
+    if path.exists(newFilePath):
+      if self.verbose:
+        print("File already exists.")
+      showerror("Oh noes", "The filename you provided already exists.")
+    else:
+      if self.verbose:
+        print("Rename image", self.currImage, "to", newFileName)
+      rename(self.currImage, newFilePath)
+      self.currImage = newFileName
+      self.displaySpecificImage(newFileName)
+      self.renameWindow.withdraw()
+
+  def renameCancelClick(self):
+    """
+    This method hides the renameCategory window and may print something to the console based on verbosity.
+    """
+    if self.verbose:
+      print("Image not renamed.")
+    self.renameWindow.withdraw()
 
   def displayNextImage(self):
     """
