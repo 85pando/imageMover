@@ -228,7 +228,7 @@ class ImageMover:
     """
     This method makes the self.newCategoryWindow visible and sets a new string to be set in the Entry.
     """
-    if self.verbose:
+    if self.verbose.get():
       print("Opening new category window.")
     self.newCategoryText.set("new category")
     self.newCategoryWindow.deiconify()
@@ -242,11 +242,11 @@ class ImageMover:
     newCategoryName = self.newCategoryText.get()
     newCategoryPath = path.abspath(newCategoryName)
     if path.exists(newCategoryPath):
-      if self.verbose:
+      if self.verbose.get():
         print("Category already exists")
       showerror("Oh noes!", "The new category already exists.")
     else:
-      if self.verbose:
+      if self.verbose.get():
         print("Create new Category", newCategoryName)
       makedirs(newCategoryPath)
       Button(self.myParent,
@@ -259,7 +259,7 @@ class ImageMover:
     """
     This method hides the createNewCategory window and may print something to the console based on verbosity.
     """
-    if self.verbose:
+    if self.verbose.get():
       print("No new category created.")
     self.newCategoryWindow.withdraw()
 
@@ -267,7 +267,7 @@ class ImageMover:
     """
     This method makes the self.renameWindow visible and sets a new string to be set in the Entry.
     """
-    if self.verbose:
+    if self.verbose.get():
       print("Opening renaming window.")
     self.renameText.set("newImageName.jpg")
     self.renameWindow.deiconify()
@@ -277,11 +277,11 @@ class ImageMover:
     newFileName = self.renameText.get()
     newFilePath = path.abspath(newFileName)
     if path.exists(newFilePath):
-      if self.verbose:
+      if self.verbose.get():
         print("File already exists.")
       showerror("Oh noes!", "The filename you provided already exists.")
     else:
-      if self.verbose:
+      if self.verbose.get():
         print("Rename image", self.currImage, "to", newFileName)
       rename(self.currImage, newFilePath)
       self.currImage = newFileName
@@ -292,7 +292,7 @@ class ImageMover:
     """
     This method hides the renameCategory window and may print something to the console based on verbosity.
     """
-    if self.verbose:
+    if self.verbose.get():
       print("Image not renamed.")
     self.renameWindow.withdraw()
 
@@ -300,7 +300,7 @@ class ImageMover:
     """
     This method makes the self.symlinkWindow visible and sets a new string to be set in the Entry.
     """
-    if self.verbose:
+    if self.verbose.get():
       print("Opening symlinking window.")
     self.symlinkLinkName.set("linkName")
     self.symlinkSourcePath.set("linkSource")
@@ -309,12 +309,12 @@ class ImageMover:
 
   def symlinkExecuteClick(self):
     if path.exists(self.symlinkLinkName.get()):
-      if self.verbose:
+      if self.verbose.get():
         print("Link name already exists.")
       showerror("Oh noes!", "The link name already exists.")
     else:
       if not path.exists(self.symlinkSourcePath.get()):
-        if self.verbose:
+        if self.verbose.get():
           print("Link source does not exists.")
         showerror("Oh noes!", "The source for the link does not exist.")
       else:
@@ -326,7 +326,7 @@ class ImageMover:
         self.symlinkWindow.withdraw()
 
   def symlinkCancelClick(self):
-    if self.verbose:
+    if self.verbose.get():
       print("Symlinking cancelled.")
     self.symlinkWindow.withdraw()
 
