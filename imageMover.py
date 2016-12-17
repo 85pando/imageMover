@@ -126,6 +126,10 @@ class ImageMover:
                                      variable=self.autoresize,
                                      )
     self.programmenu.add_separator()
+    self.programmenu.add_command(label="Redraw current Image",
+                                 command=self.redrawCanvas,
+                                 )
+    self.programmenu.add_separator()
     self.programmenu.add_command(label="New Category",
                                  command=self.newCategoryClick,
                                 )
@@ -301,6 +305,14 @@ class ImageMover:
               )
       # display the image which we just moved back
       self.displaySpecificImage(previousImage)
+
+  def redrawCanvas(self):
+    """
+    This method is used to redraw the canvas, so that an image can be resized.
+    """
+    if self.verbose.get():
+      print("Redrawing canvas.")
+    self.drawCanvas()
 
   def newCategoryClick(self):
     """
@@ -493,6 +505,16 @@ class ImageMover:
             targetWidth = 1
           if targetHeight == 0:
             targetHeight = 1
+          if self.verbose.get():
+            print("targetWidth", targetWidth,
+                  "targetHeight", targetHeight,
+                  "ratio", ratio,
+                  "imgWidht", tmpImage.width,
+                  "tmpHeight", tmpImage.height,
+                  "canvasWidth", self.canvas.winfo_width(),
+                  "canvasHeight", self.canvas.winfo_height(),
+                  "resizing now",
+            )
           # actually do the resizing
           tmpImage = tmpImage.resize((targetWidth,
                                       targetHeight),
@@ -507,12 +529,9 @@ class ImageMover:
                                anchor="nw",
                                )
       self.canvas.config(scrollregion=self.canvas.bbox(ALL))
-    except:
+    except Exception as e:
       if self.verbose.get():
-        print("This should not have happened, I verified that",
-              self.currImage,
-              "is an image beforehand.",
-              )
+        print(format(str(e)))
       exit(1)
     self.myParent.title("images left: " + str(len(self.fileNames)) + "; image: " + self.currImage)
     # draw frame
