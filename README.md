@@ -15,6 +15,7 @@ Starting from the command line: ``./imageMover [options] [path]``
 
 * ``-h``, ``--help``: displays usage instructions
 * ``-v``, ``--verbose``: display messages upon moving image handling
+* ``--noautoresize``: Don't automatically resize the image to the canvas.
 * ``--version``: displays the version number
 
 The GUI has an option to toggle logging to the command line (which only makes sense, when you started the program from the command line of course).
