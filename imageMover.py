@@ -41,7 +41,9 @@ class ImageMover:
     ## newCategory window
     self.newCategoryWindow = Toplevel()
     self.newCategoryWindow.title("Create new Category")
-    Label(self.newCategoryWindow, text="Enter the name for the new Category:").pack()
+    Label(self.newCategoryWindow,
+          text="Enter the name for the new Category:",
+          ).pack()
     self.newCategoryText = StringVar()
     Entry(self.newCategoryWindow,
           textvariable=self.newCategoryText,
@@ -59,7 +61,9 @@ class ImageMover:
     ## Rename window
     self.renameWindow = Toplevel()
     self.renameWindow.title("Rename Image")
-    Label(self.renameWindow, text="Enter the new name for the current image:").pack()
+    Label(self.renameWindow,
+          text="Enter the new name for the current image:",
+          ).pack()
     self.renameText = StringVar()
     Entry(self.renameWindow,
           textvariable=self.renameText,
@@ -77,8 +81,12 @@ class ImageMover:
     ## Symlink window
     self.symlinkWindow = Toplevel()
     self.symlinkWindow.title("Create Link")
-    Label(self.symlinkWindow, text="Name on the button").grid(row=0, column=0)
-    Label(self.symlinkWindow, text="Name on the button").grid(row=0, column=1)
+    Label(self.symlinkWindow,
+          text="Name on the button",
+          ).grid(row=0, column=0)
+    Label(self.symlinkWindow,
+          text="Name on the button",
+          ).grid(row=0, column=1)
     self.symlinkLinkName = StringVar()
     Entry(self.symlinkWindow,
           textvariable=self.symlinkLinkName,
@@ -105,39 +113,76 @@ class ImageMover:
     self.menubar = Menu(self.myParent)
     self.myParent.config(menu=self.menubar)
     ## create program menu
-    self.programmenu = Menu(self.menubar, tearoff=0)
-    self.menubar.add_cascade(label="Program", menu=self.programmenu)
+    self.programmenu = Menu(self.menubar,
+                            tearoff=0,
+                            )
+    self.menubar.add_cascade(label="Program",
+                             menu=self.programmenu,
+                             )
     self.programmenu.add_checkbutton(label="Log to Command Line",
                                  variable=self.verbose,
-    )
+                                 )
     self.programmenu.add_checkbutton(label="Automatically resize images.",
                                      variable=self.autoresize,
                                      )
     self.programmenu.add_separator()
-    self.programmenu.add_command(label="New Category", command=self.newCategoryClick)
-    self.programmenu.add_command(label="Link folder", command=self.symlinkClick)
+    self.programmenu.add_command(label="New Category",
+                                 command=self.newCategoryClick,
+                                )
+    self.programmenu.add_command(label="Link folder",
+                                 command=self.symlinkClick,
+                                 )
     self.programmenu.add_separator()
-    self.programmenu.add_command(label="Exit", command=self.closeWindow)
-    self.menubar.add_command(label="Undo Move", command=self.undoClick)
+    self.programmenu.add_command(label="Exit",
+                                 command=self.closeWindow,
+                                 )
+    self.menubar.add_command(label="Undo Move",
+                             command=self.undoClick,
+                             )
     self.menubar.add_separator()
-    self.menubar.add_command(label="Rename Image", command=self.renameClick)
+    self.menubar.add_command(label="Rename Image",
+                             command=self.renameClick,
+                             )
 
     # create imageFrame, Scrollbars & canvas
-    self.imageFrame = Frame(self.myParent, bd=2, relief=SUNKEN)
-    self.imageFrame.grid_rowconfigure(0, weight=1)
-    self.imageFrame.grid_columnconfigure(0, weight=1)
-    xscroll = Scrollbar(self.imageFrame, orient=HORIZONTAL)
-    xscroll.grid(row=1, column=0, sticky=E + W)
-    yscroll = Scrollbar(self.imageFrame, orient=VERTICAL)
-    yscroll.grid(row=0, column=1, sticky=N + S)
+    self.imageFrame = Frame(self.myParent,
+                            bd=2,
+                            relief=SUNKEN,
+                            )
+    self.imageFrame.grid_rowconfigure(0,
+                                      weight=1,
+                                      )
+    self.imageFrame.grid_columnconfigure(0,
+                                         weight=1,
+                                         )
+    xscroll = Scrollbar(self.imageFrame,
+                        orient=HORIZONTAL,
+                        )
+    xscroll.grid(row=1,
+                 column=0,
+                 sticky=E + W,
+                 )
+    yscroll = Scrollbar(self.imageFrame,
+                        orient=VERTICAL,
+                        )
+    yscroll.grid(row=0,
+                 column=1,
+                 sticky=N + S,
+                 )
     self.canvas = Canvas(self.imageFrame,
                     bd=0,
                     xscrollcommand=xscroll.set,
-                    yscrollcommand=yscroll.set)
-    self.canvas.grid(row=0, column=0, sticky=N + S + E + W)
+                    yscrollcommand=yscroll.set,
+                    )
+    self.canvas.grid(row=0,
+                     column=0,
+                     sticky=N + S + E + W,
+                     )
     xscroll.config(command=self.canvas.xview)
     yscroll.config(command=self.canvas.yview)
-    self.imageFrame.pack(fill=BOTH, expand=1)
+    self.imageFrame.pack(fill=BOTH,
+                         expand=1,
+                         )
 
     # get directoryNames and fileNames from given directory
     walkResult = walk(pathString)
@@ -146,16 +191,22 @@ class ImageMover:
     directoryNames = sorted(walkResult[1])
     self.fileNames = sorted(walkResult[2])
     # create skip and delete button
-    Button(self.myParent, text="Delete", command=self.deleteClick).pack(side=LEFT)
-    Button(self.myParent, text="Skip", command=self.skipClick).pack(side=LEFT)
+    Button(self.myParent,
+           text="Delete",
+           command=self.deleteClick,
+           ).pack(side=LEFT)
+    Button(self.myParent,
+           text="Skip",
+           command=self.skipClick,
+           ).pack(side=LEFT)
     # create arrays for folder buttons
     # noinspection PyUnusedLocal
     buttons = [Button() for x in range(len(directoryNames))]
     for counter in range(len(directoryNames)):
       buttons[counter] = Button(self.myParent,
                                 text=directoryNames[counter],
-                                command=self.directoryClickClosure(directoryNames[counter])
-      )
+                                command=self.directoryClickClosure(directoryNames[counter]),
+                                )
       buttons[counter].pack(side=LEFT)
 
     self.currImage = None
@@ -171,7 +222,9 @@ class ImageMover:
     This method is used when clicking the skip button. It does not move the current image, just goes on to the next.
     """
     if self.verbose.get():
-      print("Skipping image:", self.currImage)
+      print("Skipping image:",
+            self.currImage,
+            )
     self.displayNextImage()
 
   def deleteClick(self):
@@ -181,11 +234,15 @@ class ImageMover:
     # just to be sure its an image
     if self.testIfImage(self.currImage):
       if self.verbose.get():
-        print("Deleting image:", self.currImage)
+        print("Deleting image:",
+              self.currImage,
+              )
       remove(self.currImage)
     self.displayNextImage()
 
-  def directoryClickClosure(self, label):
+  def directoryClickClosure(self,
+                            label,
+                            ):
     """
     This is a closure method that is called upon pressing one of the directory buttons. It sends the label of the directory to the directoryClick method.
     :param label: the label of the button clicked
@@ -193,7 +250,9 @@ class ImageMover:
     """
     return lambda: self.directoryClick(label)
 
-  def directoryClick(self, targetString):
+  def directoryClick(self,
+                     targetString,
+                     ):
     """
     This method is used, when one of the directory buttons is clicked. It moves the current image to the corresponding folder and afterwards displays the next image.
     :param targetString:
@@ -202,10 +261,18 @@ class ImageMover:
     if self.testIfImage(self.currImage):
       targetString = targetString + "/" + self.currImage
       if self.verbose.get():
-        print("Moving image", self.currImage, "to", targetString)
+        print("Moving image",
+              self.currImage,
+              "to",
+              targetString,
+              )
       # store new image location for possible undo operation
-      self.lastMovedImage.append((self.currImage, targetString))
-      rename(self.currImage, targetString)
+      self.lastMovedImage.append((self.currImage,
+                                  targetString,
+                                 ))
+      rename(self.currImage,
+             targetString,
+             )
       self.displayNextImage()
 
   def undoClick(self):
@@ -220,11 +287,18 @@ class ImageMover:
       # put current image back into list
       self.fileNames.append(self.currImage)
       if self.verbose.get():
-        print("Put image", self.currImage, "back into the file list to be processed.")
+        print("Put image",
+              self.currImage,
+              "back into the file list to be processed.",
+              )
       # move previous image back into the main folder
       rename(previousPath, previousImage)
       if self.verbose.get():
-        print("Undo move of", previousImage, "from location", previousPath)
+        print("Undo move of",
+              previousImage,
+              "from location",
+              previousPath,
+              )
       # display the image which we just moved back
       self.displaySpecificImage(previousImage)
 
@@ -251,12 +325,14 @@ class ImageMover:
       showerror("Oh noes!", "The new category already exists.")
     else:
       if self.verbose.get():
-        print("Create new Category", newCategoryName)
+        print("Create new Category",
+              newCategoryName,
+              )
       makedirs(newCategoryPath)
       Button(self.myParent,
              text=newCategoryName,
-             command=self.directoryClickClosure(newCategoryName)
-      ).pack(side=LEFT)
+             command=self.directoryClickClosure(newCategoryName),
+             ).pack(side=LEFT)
       self.newCategoryWindow.withdraw()
 
   def newCategoryCancelClick(self):
@@ -286,8 +362,14 @@ class ImageMover:
       showerror("Oh noes!", "The filename you provided already exists.")
     else:
       if self.verbose.get():
-        print("Rename image", self.currImage, "to", newFileName)
-      rename(self.currImage, newFilePath)
+        print("Rename image",
+              self.currImage,
+              "to",
+              newFileName,
+              )
+      rename(self.currImage,
+             newFilePath,
+             )
       self.currImage = newFileName
       self.displaySpecificImage(newFileName)
       self.renameWindow.withdraw()
@@ -315,17 +397,23 @@ class ImageMover:
     if path.exists(self.symlinkLinkName.get()):
       if self.verbose.get():
         print("Link name already exists.")
-      showerror("Oh noes!", "The link name already exists.")
+      showerror("Oh noes!",
+                "The link name already exists.",
+                )
     else:
       if not path.exists(self.symlinkSourcePath.get()):
         if self.verbose.get():
           print("Link source does not exists.")
-        showerror("Oh noes!", "The source for the link does not exist.")
+        showerror("Oh noes!",
+                  "The source for the link does not exist.",
+                  )
       else:
-        symlink(self.symlinkSourcePath.get(), self.symlinkLinkName.get())
+        symlink(self.symlinkSourcePath.get(),
+                self.symlinkLinkName.get(),
+                )
         Button(self.myParent,
                text=self.symlinkLinkName.get(),
-               command=self.directoryClickClosure(self.symlinkLinkName.get())
+               command=self.directoryClickClosure(self.symlinkLinkName.get()),
                ).pack(side=LEFT)
         self.symlinkWindow.withdraw()
 
@@ -352,7 +440,9 @@ class ImageMover:
     else:
       self.drawCanvas()
 
-  def displaySpecificImage(self, imagePath):
+  def displaySpecificImage(self,
+                           imagePath,
+                           ):
     """
     This method will display the image that is given at the path imagePath.
     :param imagePath: The path of the image to display instead of the current one.
@@ -393,24 +483,31 @@ class ImageMover:
         if (self.canvas.winfo_height() < tmpImage.height) or\
            (self.canvas.winfo_width() < tmpImage.width):
           # calculate ratio to resize to
-          ratio = min(self.canvas.winfo_height()/float(tmpImage.height),
-                      self.canvas.winfo_width()/float(tmpImage.width))
+          ratio = min(self.canvas.winfo_height() / float(tmpImage.height),
+                      self.canvas.winfo_width() / float(tmpImage.width),
+                      )
           targetWidth = int(ratio * tmpImage.width)
           targetHeight = int(ratio * tmpImage.height)
           # actually do the resizing
-          tmpImage = tmpImage.resize((targetHeight, targetWidth),
-                                     Image.ANTIALIAS)
+          tmpImage = tmpImage.resize((targetHeight,
+                                      targetWidth),
+                                     Image.ANTIALIAS,
+                                     )
       # convert the image to something TK can handle
       self.imagefile = ImageTk.PhotoImage(tmpImage)
       # do some canvas stuff
       self.canvas.delete("all")
       self.canvas.create_image(0, 0,
                                image=self.imagefile,
-                               anchor="nw")
+                               anchor="nw",
+                               )
       self.canvas.config(scrollregion=self.canvas.bbox(ALL))
     except:
       if self.verbose.get():
-        print("This should not have happened, I verified that", self.currImage, "is an image beforehand.")
+        print("This should not have happened, I verified that",
+              self.currImage,
+              "is an image beforehand.",
+              )
       exit(1)
     self.myParent.title("images left: " + str(len(self.fileNames)) + "; image: " + self.currImage)
     # draw frame
@@ -427,17 +524,19 @@ class ImageMover:
 
 if __name__ == '__main__':
   usage = "usage: %prog [options] [path]"
-  parser = OptionParser(usage=usage, version="%prog v0.1.x")
+  parser = OptionParser(usage=usage,
+                        version="%prog v0.1.x",
+                        )
   parser.add_option('-v', '--verbose',
                     action='store_true',
                     dest='verbose',
-                    help='enables output to command line'
+                    help='enables output to command line',
                     )
   parser.set_defaults(verbose=False)
   parser.add_option('--noautoresize',
                     action='store_false',
                     dest='autoresize',
-                    help='enables resizing, if the image is larger than the canvas'
+                    help='enables resizing, if the image is larger than the canvas',
                     )
   parser.set_defaults(autoresize=True)
   (options, args) = parser.parse_args()
@@ -460,6 +559,9 @@ if __name__ == '__main__':
 
   # start the program
   root = Tk()
-  imageMover = ImageMover(root, options.verbose, options.autoresize)
+  imageMover = ImageMover(root,
+                          options.verbose,
+                          options.autoresize,
+                          )
   root.mainloop()
   exit(0)
