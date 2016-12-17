@@ -110,6 +110,9 @@ class ImageMover:
     self.programmenu.add_checkbutton(label="Log to Command Line",
                                  variable=self.verbose,
     )
+    self.programmenu.add_checkbutton(label="Automatically resize images.",
+                                     variable=self.autoresize,
+                                     )
     self.programmenu.add_separator()
     self.programmenu.add_command(label="New Category", command=self.newCategoryClick)
     self.programmenu.add_command(label="Link folder", command=self.symlinkClick)
