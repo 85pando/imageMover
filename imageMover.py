@@ -488,9 +488,14 @@ class ImageMover:
                       )
           targetWidth = int(ratio * tmpImage.width)
           targetHeight = int(ratio * tmpImage.height)
+          # This is needed for the first round, or when there are extreme changes in size
+          if targetWidth == 0:
+            targetWidth = 1
+          if targetHeight == 0:
+            targetHeight = 1
           # actually do the resizing
-          tmpImage = tmpImage.resize((targetHeight,
-                                      targetWidth),
+          tmpImage = tmpImage.resize((targetWidth,
+                                      targetHeight),
                                      Image.ANTIALIAS,
                                      )
       # convert the image to something TK can handle
