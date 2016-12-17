@@ -14,7 +14,8 @@ See the full license text here: https://creativecommons.org/licenses/by-sa/3.0/l
 ######### Imports
 from __future__ import print_function
 from Tkinter import *
-import Image, ImageTk
+#import Image, ImageTk
+from PIL import Image, ImageTk
 from os import walk
 from os import path
 from os import chdir
