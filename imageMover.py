@@ -33,11 +33,11 @@ class ImageMover:
   The ImageMover class displays a windows in which an image is shown. Buttons are presented for skipping, deleting or moving the image. The buttons for moving images are based on the folders in the current path.
   """
 
-  def __init__(self, parent, verbose):
+  def __init__(self, parent, verbose, autoresize):
     self.verbose = BooleanVar(value=verbose)
+    self.autoresize = BooleanVar(value=autoresize)
     self.lastMovedImage = []
     # prepare windows
-
     ## newCategory window
     self.newCategoryWindow = Toplevel()
     self.newCategoryWindow.title("Create new Category")
@@ -384,9 +384,26 @@ class ImageMover:
     try:
       # this variable has to be kept in class, or drawing might fail
       # noinspection PyAttributeOutsideInit
-      self.imagefile = ImageTk.PhotoImage(Image.open(self.currImage))
+      tmpImage = Image.open(self.currImage)
+      if self.autoresize.get():
+        # scale down the image to size of the canvas, so it fits on screen
+        if (self.canvas.winfo_height() < tmpImage.height) or\
+           (self.canvas.winfo_width() < tmpImage.width):
+          # calculate ratio to resize to
+          ratio = min(self.canvas.winfo_height()/float(tmpImage.height),
+                      self.canvas.winfo_width()/float(tmpImage.width))
+          targetWidth = int(ratio * tmpImage.width)
+          targetHeight = int(ratio * tmpImage.height)
+          # actually do the resizing
+          tmpImage = tmpImage.resize((targetHeight, targetWidth),
+                                     Image.ANTIALIAS)
+      # convert the image to something TK can handle
+      self.imagefile = ImageTk.PhotoImage(tmpImage)
+      # do some canvas stuff
       self.canvas.delete("all")
-      self.canvas.create_image(0, 0, image=self.imagefile, anchor="nw")
+      self.canvas.create_image(0, 0,
+                               image=self.imagefile,
+                               anchor="nw")
       self.canvas.config(scrollregion=self.canvas.bbox(ALL))
     except:
       if self.verbose.get():
@@ -414,6 +431,12 @@ if __name__ == '__main__':
                     help='enables output to command line'
                     )
   parser.set_defaults(verbose=False)
+  parser.add_option('--noautoresize',
+                    action='store_false',
+                    dest='autoresize',
+                    help='enables resizing, if the image is larger than the canvas'
+                    )
+  parser.set_defaults(autoresize=True)
   (options, args) = parser.parse_args()
 
   # create pathString
@@ -434,6 +457,6 @@ if __name__ == '__main__':
 
   # start the program
   root = Tk()
-  imageMover = ImageMover(root, options.verbose)
+  imageMover = ImageMover(root, options.verbose, options.autoresize)
   root.mainloop()
   exit(0)
