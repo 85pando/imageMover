@@ -525,7 +525,7 @@ class ImageMover:
 if __name__ == '__main__':
   usage = "usage: %prog [options] [path]"
   parser = OptionParser(usage=usage,
-                        version="%prog v0.1.x",
+                        version="%prog v0.2.x",
                         )
   parser.add_option('-v', '--verbose',
                     action='store_true',
