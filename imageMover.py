@@ -194,6 +194,7 @@ class ImageMover:
     # split up walkResult into directories and files
     directoryNames = sorted(walkResult[1])
     self.fileNames = sorted(walkResult[2])
+    self.fileNames = self.fileNames[::-1]
     # create skip and delete button
     Button(self.myParent,
            text="Delete",
