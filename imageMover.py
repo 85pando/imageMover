@@ -12,8 +12,9 @@ See the full license text here: https://creativecommons.org/licenses/by-sa/3.0/l
 """
 
 ######### Imports
-from __future__ import print_function
-from Tkinter import *
+
+import sys
+from tkinter import *
 #import Image, ImageTk
 from PIL import Image, ImageTk
 from os import walk
@@ -23,7 +24,7 @@ from os import remove
 from os import rename
 from os import makedirs
 from os import symlink
-from tkMessageBox import showerror
+from tkinter.messagebox import showerror
 from optparse import OptionParser
 ######### End Imports
 
@@ -190,7 +191,7 @@ class ImageMover:
 
     # get directoryNames and fileNames from given directory
     walkResult = walk(pathString)
-    walkResult = walkResult.next()
+    walkResult = next(walkResult)
     # split up walkResult into directories and files
     directoryNames = sorted(walkResult[1])
     self.fileNames = sorted(walkResult[2])
