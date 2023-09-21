@@ -520,7 +520,7 @@ class ImageMover:
           # actually do the resizing
           tmpImage = tmpImage.resize((targetWidth,
                                       targetHeight),
-                                     Image.ANTIALIAS,
+                                     #Image.ANTIALIAS,
                                      )
       # convert the image to something TK can handle
       self.imagefile = ImageTk.PhotoImage(tmpImage)
